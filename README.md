@@ -1,8 +1,8 @@
-# Quantitative Credit Risk Engine 🚀📊
+# Quantitative Credit Risk Engine 
 
 Welcome to the **Quantitative Credit Risk Engine**! This project is a highly specialized, production-grade machine learning pipeline designed for modern financial underwriting. It takes raw financial profiles and transforms them into strictly calibrated probabilities of default, utilizing dynamic FICO bucketing and adversarial-tested gradient boosting.
 
-## 🌟 Key Features
+##  Key Features
 
 - **Dynamic FICO Bucketing:** Employs dynamic programming to group credit scores into statistically optimal risk tiers, mimicking real-world bank underwriting (Prime, Subprime, etc.).
 - **Multi-Dataset Support:** Successfully harmonizes and trains on diverse global datasets, including Lending Club, the German Credit Market, and generic credit risk profiles.
@@ -10,7 +10,7 @@ Welcome to the **Quantitative Credit Risk Engine**! This project is a highly spe
 - **Calibrated Default Probabilities:** Evaluates against the Brier Score to ensure predictions aren't just arbitrary scores, but true mathematical probabilities of default (PD).
 - **Bulletproof Test Suite:** Contains a dedicated 108-test `pytest` suite (covering 280 assertions) that rigorously verifies algorithmic contracts, dataset compatibility, and adversarial robustness.
 
-## 🏗️ Project Structure
+##  Project Structure
 
 ```text
 quantproj/
@@ -27,7 +27,7 @@ quantproj/
 └── incremental_train.py        # Harmonization and sequential XGBoost updating
 ```
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### 1. Environment Setup
 The project requires Python and standard data science libraries.
@@ -55,7 +55,7 @@ Ensure the integrity of the entire engine by running the adversarial test suite:
 python -m pytest
 ```
 
-## 🔒 Security & Integrity
+##  Security & Integrity
 This repository enforces strict data hygiene. Buffer files, pycache, massive datasets, and binary model artifacts are ignored via `.gitignore` to keep the codebase lightweight and highly secure.
 
 ---

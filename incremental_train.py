@@ -126,7 +126,7 @@ def run_incremental_training():
         ('classifier', xgb_clf)
     ])
     
-    out_file = 'incremental_master_model.joblib'
+    out_file = 'models/incremental_master_model.joblib'
     joblib.dump(final_pipeline, out_file)
     print(f"\nIncremental learning complete! Master model saved to {out_file}")
 

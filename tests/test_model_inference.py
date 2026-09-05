@@ -20,19 +20,19 @@ from sklearn.pipeline import Pipeline
 
 
 ALL_MODEL_ARTIFACTS = [
-    "model_artifact.joblib",
-    "model.joblib",
-    "model_german.joblib",
-    "model_credit_risk.joblib",
-    "model_loan.joblib",
-    "incremental_master_model.joblib"
+    "models/model_artifact.joblib",
+    "models/model.joblib",
+    "models/model_german.joblib",
+    "models/model_credit_risk.joblib",
+    "models/model_loan.joblib",
+    "models/incremental_master_model.joblib"
 ]
 
 ALL_METADATA_ARTIFACTS = [
-    "model_artifact_metadata.joblib",
-    "model_german_metadata.joblib",
-    "model_credit_risk_metadata.joblib",
-    "model_loan_metadata.joblib"
+    "models/model_artifact_metadata.joblib",
+    "models/model_german_metadata.joblib",
+    "models/model_credit_risk_metadata.joblib",
+    "models/model_loan_metadata.joblib"
 ]
 
 
@@ -42,7 +42,7 @@ def get_sample_inference_data(artifact_name: str, n_samples: int = 5) -> pd.Data
     for the specified model artifact.
     """
     n = n_samples
-    if artifact_name == "model_artifact.joblib":
+    if artifact_name == "models/model_artifact.joblib":
         return pd.DataFrame({
             'FICO_score': [780, 650, 580, 720, 690][:n],
             'income': [95000.0, 55000.0, 32000.0, 80000.0, 62000.0][:n],
@@ -50,18 +50,18 @@ def get_sample_inference_data(artifact_name: str, n_samples: int = 5) -> pd.Data
             'dti': [0.18, 0.32, 0.45, 0.22, 0.28][:n],
             'employment_length': [6, 3, 1, 8, 4][:n]
         })
-    elif artifact_name == "model.joblib":
-        df = get_sample_inference_data("model_artifact.joblib", n).copy()
+    elif artifact_name == "models/model.joblib":
+        df = get_sample_inference_data("models/model_artifact.joblib", n).copy()
         df['purpose'] = ['debt_consolidation', 'credit_card', 'home_improvement', 'major_purchase', 'medical'][:n]
         df['home_ownership'] = ['MORTGAGE', 'RENT', 'RENT', 'OWN', 'RENT'][:n]
         return df
-    elif artifact_name == "model_german.joblib":
+    elif artifact_name == "models/model_german.joblib":
         return pd.read_csv("data/german_ready.csv", nrows=n).drop(columns=['kredit'])
-    elif artifact_name == "model_credit_risk.joblib":
+    elif artifact_name == "models/model_credit_risk.joblib":
         return pd.read_csv("data/credit_risk_dataset.csv", nrows=n).drop(columns=['loan_status'])
-    elif artifact_name == "model_loan.joblib":
+    elif artifact_name == "models/model_loan.joblib":
         return pd.read_csv("data/loan_ready.csv", nrows=n).drop(columns=['loan_status'])
-    elif artifact_name == "incremental_master_model.joblib":
+    elif artifact_name == "models/incremental_master_model.joblib":
         return pd.DataFrame({
             'loan_amount': [5000.0, 12000.0, 25000.0, 8000.0, 15000.0][:n],
             'emp_length': ['1-4 years', '7+ years', '< 1 year', '4-7 years', 'unknown'][:n],
@@ -281,7 +281,7 @@ def test_fico_boundaries_in_applicable_metadata():
     - Has strictly monotonic cutoffs
     - Has corresponding bucket_means between 0.0 and 1.0
     """
-    for meta_name in ['model_artifact_metadata.joblib', 'model_credit_risk_metadata.joblib']:
+    for meta_name in ['models/model_artifact_metadata.joblib', 'models/model_credit_risk_metadata.joblib']:
         meta = joblib.load(meta_name)
         boundaries = meta.get('fico_boundaries')
         assert boundaries is not None, f"Expected fico_boundaries in {meta_name}"
@@ -305,8 +305,8 @@ def test_inference_missing_required_column_raises():
     """
     Verifies that omitting a required feature column raises a descriptive ValueError.
     """
-    model = joblib.load("model_artifact.joblib")
-    df = get_sample_inference_data("model_artifact.joblib", n_samples=2)
+    model = joblib.load("models/model_artifact.joblib")
+    df = get_sample_inference_data("models/model_artifact.joblib", n_samples=2)
     df_missing = df.drop(columns=['loan_amount'])
     
     with pytest.raises(ValueError, match="columns are missing"):
@@ -318,8 +318,8 @@ def test_inference_continuous_nan_imputation():
     Verifies that injecting NaNs into continuous features is handled cleanly
     by SimpleImputer(strategy='median') without producing NaN outputs.
     """
-    model = joblib.load("model_artifact.joblib")
-    df = get_sample_inference_data("model_artifact.joblib", n_samples=3)
+    model = joblib.load("models/model_artifact.joblib")
+    df = get_sample_inference_data("models/model_artifact.joblib", n_samples=3)
     
     # Inject NaNs
     df.loc[0, 'income'] = np.nan
@@ -338,7 +338,7 @@ def test_inference_unseen_categorical_levels():
     is handled cleanly by OneHotEncoder(handle_unknown='ignore')
     without crashing or returning NaNs.
     """
-    model = joblib.load("incremental_master_model.joblib")
+    model = joblib.load("models/incremental_master_model.joblib")
     df = pd.DataFrame([{
         'loan_amount': 15000.0,
         'emp_length': '30+ years unrecorded category',
@@ -357,14 +357,14 @@ def test_model_artifact_and_model_joblib_coherence():
     Verifies that model_artifact.joblib and model.joblib both exist,
     load successfully as valid Pipeline estimators, and score borrowers cleanly.
     """
-    m1 = joblib.load("model_artifact.joblib")
-    m2 = joblib.load("model.joblib")
+    m1 = joblib.load("models/model_artifact.joblib")
+    m2 = joblib.load("models/model.joblib")
     
     assert isinstance(m1, Pipeline)
     assert isinstance(m2, Pipeline)
     
-    df1 = get_sample_inference_data("model_artifact.joblib", n_samples=2)
-    df2 = get_sample_inference_data("model.joblib", n_samples=2)
+    df1 = get_sample_inference_data("models/model_artifact.joblib", n_samples=2)
+    df2 = get_sample_inference_data("models/model.joblib", n_samples=2)
     
     p1 = m1.predict_proba(df1)
     p2 = m2.predict_proba(df2)

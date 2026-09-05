@@ -8,7 +8,7 @@ import numpy as np
 from data_generator import generate_loan_data
 from model_training import train_and_evaluate
 
-def run_pipeline(data_path="loan_data.csv", output_artifact="model_artifact.joblib", max_fico_buckets=5, target_col='default', fico_col='FICO_score'):
+def run_pipeline(data_path="loan_data.csv", output_artifact="models/model_artifact.joblib", max_fico_buckets=5, target_col='default', fico_col='FICO_score'):
     """
     Top-level execution pipeline:
     1. Ingestion / Data verification (generates loan_data.csv if missing)
@@ -42,7 +42,7 @@ def run_pipeline(data_path="loan_data.csv", output_artifact="model_artifact.jobl
     )
     
     # Also save as model.joblib for seamless multi-convention compatibility
-    alt_artifact = "model.joblib"
+    alt_artifact = "models/model.joblib"
     if output_artifact != alt_artifact:
         shutil.copyfile(output_artifact, alt_artifact)
         print(f"Also saved synchronized artifact to '{alt_artifact}'.")
@@ -84,7 +84,7 @@ def run_pipeline(data_path="loan_data.csv", output_artifact="model_artifact.jobl
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train and Evaluate Credit Risk Model Pipeline")
     parser.add_argument("--data-path", default="loan_data.csv", help="Path to loan data CSV")
-    parser.add_argument("--output", default="model_artifact.joblib", help="Output artifact joblib file")
+    parser.add_argument("--output", default="models/model_artifact.joblib", help="Output artifact joblib file")
     parser.add_argument("--max-buckets", type=int, default=5, help="Maximum FICO DP buckets")
     parser.add_argument("--target-col", default="default", help="Name of the target variable column")
     parser.add_argument("--fico-col", default="FICO_score", help="Name of the FICO/credit score column")

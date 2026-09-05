@@ -83,10 +83,10 @@ def load_model_artifact(artifact_path: Optional[str] = None, metadata_path: Opti
     if artifact_path:
         candidate_paths.append(artifact_path)
     candidate_paths.extend([
-        os.path.join(CURRENT_DIR, "model_artifact.joblib"),
-        "model_artifact.joblib",
-        os.path.join(CURRENT_DIR, "model.joblib"),
-        "model.joblib"
+        os.path.join(CURRENT_DIR, "models", "model_artifact.joblib"),
+        "models/model_artifact.joblib",
+        os.path.join(CURRENT_DIR, "models", "models/model.joblib"),
+        "models/model.joblib"
     ])
 
     resolved_model_path = None
@@ -106,8 +106,8 @@ def load_model_artifact(artifact_path: Optional[str] = None, metadata_path: Opti
     if metadata_path:
         candidate_meta_paths.append(metadata_path)
     candidate_meta_paths.extend([
-        os.path.join(CURRENT_DIR, "model_artifact_metadata.joblib"),
-        "model_artifact_metadata.joblib",
+        os.path.join(CURRENT_DIR, "models", "model_artifact_metadata.joblib"),
+        "models/model_artifact_metadata.joblib",
         resolved_model_path.replace(".joblib", "_metadata.joblib")
     ])
 

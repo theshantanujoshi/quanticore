@@ -196,7 +196,7 @@ class TestIncrementalMasterModelArtifact:
     def test_run_incremental_training_execution_and_persistence(self):
         """Executes run_incremental_training and asserts master model artifact is saved."""
         run_incremental_training()
-        out_file = 'incremental_master_model.joblib'
+        out_file = 'models/incremental_master_model.joblib'
         assert os.path.exists(out_file), f"Expected artifact {out_file} to exist"
 
         pipeline = joblib.load(out_file)
@@ -209,7 +209,7 @@ class TestIncrementalMasterModelArtifact:
 
     def test_incremental_master_model_inference_all_domains(self):
         """Verifies calibrated inference on borrower profiles from all 3 training domains."""
-        out_file = 'incremental_master_model.joblib'
+        out_file = 'models/incremental_master_model.joblib'
         pipeline = joblib.load(out_file)
 
         # 1. Lending Club borrower profile

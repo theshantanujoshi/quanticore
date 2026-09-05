@@ -1,0 +1,15 @@
+# Virtual Environments
+myenv/
+.agents/
+
+# Python Cache
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Datasets
+data/
+*.csv
+
+# Model Artifacts
+*.joblib

@@ -1,0 +1,45 @@
+flowchart TD
+    classDef data fill:#1f2937,stroke:#9ca3af,stroke-width:2px,color:#fff;
+    classDef process fill:#1e3a8a,stroke:#60a5fa,stroke-width:2px,color:#fff;
+    classDef model fill:#064e3b,stroke:#34d399,stroke-width:2px,color:#fff;
+    classDef api fill:#78350f,stroke:#fbbf24,stroke-width:2px,color:#fff;
+    classDef external fill:#831843,stroke:#f472b6,stroke-width:2px,color:#fff;
+
+    subgraph Data_Layer [Data Layer]
+        A["data_generator.py"] -->|"Generates"| B[("loan_data.csv")]
+    end
+
+    subgraph Training_Pipeline [Training & Evaluation Pipeline]
+        C{"preprocessing.py"}
+        B -->|"Raw Data"| C
+        
+        C -->|"1. FICO Scores"| D["FicoDPBucketer"]
+        C -->|"2. Categorical"| E["OneHotEncoder"]
+        C -->|"3. Numerical"| F["SimpleImputer & StandardScaler"]
+        
+        D --> G["ColumnTransformer"]
+        E --> G
+        F --> G
+        
+        G -->|"Processed Features"| H["train.py"]
+        H -->|"Cross Validation & Grid Search"| I("Logistic Regression Model")
+        I -->|"Serialize"| J[("model_artifact.joblib")]
+    end
+
+    subgraph Production_Serving [Production Serving Layer]
+        K["api.py FastAPI Application"]
+        J -.->|"Loads Model Artifact"| K
+        L["Pydantic v2 Schema Validation"] --> K
+        K --> M["/predict Single Inference"]
+        K --> N["/predict/batch Batch Inference"]
+    end
+
+    O(("Client / Recruiter")) -->|"POST JSON Request"| L
+    M -->|"JSON Response"| O
+    N -->|"JSON Response"| O
+
+    class B,J data;
+    class C,D,E,F,G,H,L process;
+    class I model;
+    class K,M,N api;
+    class O external;

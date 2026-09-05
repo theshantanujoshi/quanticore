@@ -27,7 +27,7 @@ quantproj/
 └── incremental_train.py        # Harmonization and sequential XGBoost updating
 ```
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### 1. Environment Setup
 The project requires Python and standard data science libraries.

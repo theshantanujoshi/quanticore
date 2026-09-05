@@ -17,7 +17,7 @@ quantproj/
 ├── data/                       # CSV datasets (Lending Club, German, Generic)
 ├── docs/                       # Project documentation (PRD, HLD, Architecture diagrams)
 ├── tests/                      # Massive pytest suite (108 tests) for 100% reliability
-├── models/                     # (Ignored) Your generated .joblib model artifacts
+├── models/                     # Pre-trained .joblib model artifacts (Ready for inference)
 ├── api.py                      # (If applicable) Core API endpoints
 ├── data_generator.py           # Synthetic data generation fallback
 ├── fico_bucketing.py           # Custom DP FICO Bucketer Transformer
@@ -27,7 +27,7 @@ quantproj/
 └── incremental_train.py        # Harmonization and sequential XGBoost updating
 ```
 
-##  Getting Started
+## 🚀 Getting Started
 
 ### 1. Environment Setup
 The project requires Python and standard data science libraries.
@@ -37,10 +37,13 @@ myenv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 2. Training a Model
-You can dynamically train a model on any dataset using the CLI orchestrator:
+### 2. Immediate Inference
+Because the models are lightweight, the pre-trained artifacts are included directly in the `models/` folder. You can immediately load `models/incremental_master_model.joblib` into your applications without re-training!
+
+### 3. Training a Model
+You can dynamically train a new model on any dataset using the CLI orchestrator:
 ```bash
-python train.py --data-path data/credit_risk_dataset.csv --target-col loan_status --fico-col cb_person_cred_hist_length --output model_credit_risk.joblib
+python train.py --data-path data/credit_risk_dataset.csv --target-col loan_status --fico-col cb_person_cred_hist_length --output models/model_credit_risk.joblib
 ```
 
 ### 3. Incremental Super-Model

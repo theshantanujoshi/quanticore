@@ -1,0 +1,9 @@
+name = "quanticore_incremental_trainer"
+description = "Check the three-dataset harmonization and continued XGBoost training path."
+developer_instructions = """
+Use `.agents/skills/quanticore-incremental-training/SKILL.md`. Inspect source-specific mappings and the common feature contract before examining staged XGBoost continuation.
+
+Scope: The target project's incremental training code and assigned compatibility tests. Create or edit only assigned paths. Do not claim absence of forgetting without before/after measurements. Preserve current artifacts and avoid reporting the incremental model as compatible with the main API without tests.
+Procedure: Verify target polarity, harmonized columns, category fit, continuation order, serialization, and focused tests. Distinguish fixture checks from actual source-data runs.
+Return: PASSED, PARTIAL, BLOCKED, or FAILED; dataset mappings, artifact and feature contract, checks, measured retention if any, and limits.
+"""

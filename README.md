@@ -1,65 +1,19 @@
-# Quantitative Credit Risk Engine 
+# Quanticore agent suite
 
-Welcome to the **Quantitative Credit Risk Engine**! This project is a highly specialized, production-grade machine learning pipeline designed for modern financial underwriting. It takes raw financial profiles and transforms them into strictly calibrated probabilities of default, utilizing dynamic FICO bucketing and adversarial-tested gradient boosting.
+Quanticore is a portable set of seven skills and seven matching agents for building and reviewing a quantitative credit risk pipeline. This repository contains **instructions and installation tools only**. It does not include loan datasets, trained models, training code, a scoring API, or a frontend.
 
-##  Key Features
+The [workflow skill](.agents/skills/quanticore-workflow/SKILL.md) coordinates data intake, supervised FICO bucketing, model training, three-dataset continuation, API serving, and verification. Each specialist skill also works alone. The suite uses the same canonical skill, generated adapter, and conflict-safe installer layout as Codelore, with [Indium-AgentKit](https://github.com/Indium-AI-Labs/indium-agentkit) authoring guidance.
 
-- **Dynamic FICO Bucketing:** Employs dynamic programming to group credit scores into statistically optimal risk tiers, mimicking real-world bank underwriting (Prime, Subprime, etc.).
-- **Multi-Dataset Support:** Successfully harmonizes and trains on diverse global datasets, including Lending Club, the German Credit Market, and generic credit risk profiles.
-- **Incremental Learning Pipeline:** Uses XGBoost's `xgb_model` continuation to sequentially learn across multiple distinct datasets without forgetting previous patterns—yielding a massive, generalized "super model".
-- **Calibrated Default Probabilities:** Evaluates against the Brier Score to ensure predictions aren't just arbitrary scores, but true mathematical probabilities of default (PD).
-- **Bulletproof Test Suite:** Contains a dedicated 108-test `pytest` suite (covering 280 assertions) that rigorously verifies algorithmic contracts, dataset compatibility, and adversarial robustness.
+## Use the suite
 
-##  Project Structure
+Install it into a checkout where you want to create or maintain a credit risk engine:
 
-```text
-quantproj/
-├── data/                       # CSV datasets (Lending Club, German, Generic)
-├── docs/                       # Project documentation (PRD, HLD, Architecture diagrams)
-├── tests/                      # Massive pytest suite (108 tests) for 100% reliability
-├── models/                     # Pre-trained .joblib model artifacts (Ready for inference)
-├── api.py                      # (If applicable) Core API endpoints
-├── data_generator.py           # Synthetic data generation fallback
-├── fico_bucketing.py           # Custom DP FICO Bucketer Transformer
-├── model_training.py           # Multi-model benchmarking (RF, XGBoost, LR)
-├── preprocessing.py            # Data imputation and categorical encoding
-├── train.py                    # End-to-end CLI training orchestrator
-└── incremental_train.py        # Harmonization and sequential XGBoost updating
+```powershell
+npx quanticore-agent-suite init D:\path\to\target-repo --harness codex
 ```
 
-## 🚀 Getting Started
+From this source checkout, `python scripts/install-quanticore.py D:\path\to\target-repo --harness codex` provides the same files without npm.
 
-### 1. Environment Setup
-The project requires Python and standard data science libraries.
-```bash
-python -m venv myenv
-myenv\Scripts\activate
-pip install -r requirements.txt
-```
+Then ask your coding agent, for example: `Use the quanticore-workflow skill to build and verify a credit-risk training and serving pipeline in this checkout.` For a focused task, name `quanticore-fico-bucketing`, `quanticore-model-training`, or another specialist. A single agent can follow every skill; delegation is optional.
 
-### 2. Immediate Inference
-Because the models are lightweight, the pre-trained artifacts are included directly in the `models/` folder. You can immediately load `models/incremental_master_model.joblib` into your applications without re-training!
-
-### 3. Training a Model
-You can dynamically train a new model on any dataset using the CLI orchestrator:
-```bash
-python train.py --data-path data/credit_risk_dataset.csv --target-col loan_status --fico-col cb_person_cred_hist_length --output models/model_credit_risk.joblib
-```
-
-### 3. Incremental Super-Model
-To run the specialized incremental pipeline that learns sequentially across all datasets:
-```bash
-python incremental_train.py
-```
-
-### 4. Running the Test Suite
-Ensure the integrity of the entire engine by running the adversarial test suite:
-```bash
-python -m pytest
-```
-
-##  Security & Integrity
-This repository enforces strict data hygiene. Buffer files, pycache, massive datasets, and binary model artifacts are ignored via `.gitignore` to keep the codebase lightweight and highly secure.
-
----
-*Built with precision for quantitative finance.*
+The [CLI guide](cli/README.md) covers other harnesses. The [authoring guide](docs/quanticore-kit-authoring.md) explains canonical files and validation. See the [test record](docs/quanticore-kit-test.md) for the latest suite checks.

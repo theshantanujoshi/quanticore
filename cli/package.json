@@ -1,0 +1,33 @@
+{
+  "name": "quanticore-agent-suite",
+  "version": "0.1.0",
+  "description": "Install Quanticore credit-risk workflow skills and agents into a local checkout",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theshantanujoshi/quanticore.git",
+    "directory": "cli"
+  },
+  "homepage": "https://github.com/theshantanujoshi/quanticore#readme",
+  "bugs": "https://github.com/theshantanujoshi/quanticore/issues",
+  "type": "module",
+  "bin": {
+    "quanticore-agent-suite": "./bin/quanticore.mjs"
+  },
+  "files": [
+    "LICENSE",
+    "bin/",
+    "lib/",
+    "payload/"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prepack": "node ./scripts/prepare-payload.mjs",
+    "test": "node ./scripts/prepare-payload.mjs && node --test"
+  }
+}

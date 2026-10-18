@@ -1,15 +1,12 @@
-# Virtual Environments
-myenv/
-.agents/
-
-# Python Cache
+# Generated package payload and local caches
+cli/payload/
+cli/.npm-cache/
+cli/*.tgz
+.release-smoke/
 __pycache__/
 *.pyc
 .pytest_cache/
 
-# Datasets
-data/
-*.csv
-
-# Model Artifacts
-# (Models are small enough to be tracked in Git for this project)
+# Keep canonical skills; ignore agent execution state
+.agents/*
+!.agents/skills/

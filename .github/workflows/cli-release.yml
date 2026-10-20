@@ -1,0 +1,53 @@
+name: Release CLI package
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['20', '24']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python scripts/validate-quanticore-kit.py
+      - run: python scripts/test-install-quanticore.py
+      - run: npm --prefix cli test
+
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: npm-release
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: https://registry.npmjs.org
+      - name: Verify release version
+        run: test "v$(node -p "require('./cli/package.json').version")" = "$GITHUB_REF_NAME"
+      - name: Pack once
+        id: pack
+        shell: bash
+        run: |
+          mkdir release-artifact
+          npm pack ./cli --pack-destination release-artifact --silent
+          tarballs=(release-artifact/*.tgz)
+          test "${#tarballs[@]}" -eq 1
+          echo "tarball=./${tarballs[0]}" >> "$GITHUB_OUTPUT"
+      - name: Publish packed artifact
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.QUANTICORE }}
+        run: npm publish "${{ steps.pack.outputs.tarball }}" --access public --provenance

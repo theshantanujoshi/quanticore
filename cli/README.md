@@ -41,3 +41,7 @@ npm --prefix cli test
 ```
 
 `prepack` refreshes the package payload from canonical skills and generated profiles. The package has no runtime dependencies. See `docs/quanticore-kit-authoring.md` for the authoring contract.
+
+## Release setup
+
+The [release workflow](../.github/workflows/cli-release.yml) runs when a GitHub release is published from a `v` tag matching `cli/package.json`. It checks Node.js 20 and 24, packs the tagged commit once, and publishes that tarball with provenance. The `npm-release` GitHub environment requires a reviewer and a `QUANTICORE` secret containing an npm publish token.

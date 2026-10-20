@@ -1,7 +1,7 @@
 {
   "name": "quanticore-agent-suite",
-  "version": "0.1.0",
-  "description": "Install Quanticore credit-risk workflow skills and agents into a local checkout",
+  "version": "0.1.1",
+  "description": "Local-first agent skills for credit risk modeling, serving, and verification",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/theshantanujoshi/quanticore.git",

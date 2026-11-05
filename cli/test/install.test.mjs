@@ -23,7 +23,13 @@ test('installs all profiles and is idempotent', async () => withTarget(async tar
     '.codex/agents/quanticore_coordinator.toml',
     '.claude/agents/quanticore_coordinator.md',
     '.kiro/skills/quanticore-workflow/SKILL.md',
+    '.claude/skills/quanticore-workflow/references/evidence.md',
+    '.kiro/skills/quanticore-workflow/references/evidence.md',
   ]) assert.ok((await stat(path.join(target, file))).isFile());
+  const canonical = (await readFile(path.join(target, '.agents/skills/quanticore-workflow/SKILL.md'), 'utf8')).replaceAll('\r\n', '\n');
+  for (const harness of ['claude', 'kiro']) {
+    assert.equal((await readFile(path.join(target, `.${harness}/skills/quanticore-workflow/SKILL.md`), 'utf8')).replaceAll('\r\n', '\n'), canonical);
+  }
   const second = await install({ target, harnesses: [], payloadRoot });
   assert.equal(second.copied, 0);
 }));

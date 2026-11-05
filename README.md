@@ -4,7 +4,7 @@
 
 Quanticore is a portable set of seven skills and seven matching agents for building and reviewing a quantitative credit risk pipeline. This repository contains **instructions and installation tools only**. It does not include loan datasets, trained models, training code, a scoring API, or a frontend.
 
-The [workflow skill](.agents/skills/quanticore-workflow/SKILL.md) coordinates data intake, supervised FICO bucketing, model training, three-dataset continuation, API serving, and verification. Each specialist skill also works alone. The suite uses the same canonical skill, generated adapter, and conflict-safe installer layout as Codelore, with [Indium-AgentKit](https://github.com/Indium-AI-Labs/indium-agentkit) authoring guidance.
+The [workflow skill](.agents/skills/quanticore-workflow/SKILL.md) coordinates data intake, supervised FICO bucketing, model training, three-dataset continuation, API serving, and verification. Each specialist skill also works alone. Skills follow the [Agent Skills specification](https://agentskills.io/specification): each has a `SKILL.md` with discovery metadata and instructions, plus optional references loaded as needed. The installer preserves existing differing files.
 
 ## Use the suite
 
@@ -23,7 +23,7 @@ The [CLI guide](cli/README.md) covers other harnesses. The [authoring guide](doc
 ## What is included
 
 - Seven skills covering data intake, FICO bucketing, model training, incremental training, serving, verification, and the end-to-end workflow.
-- Seven matching agent profiles. Codex profiles live alongside the canonical skills; generated adapters support Aider, Amp, Antigravity, Claude, Cline, GitHub Copilot, Cursor, Devin, Gemini, Kiro, OpenCode, and Roo.
+- Seven optional matching agent profiles. Codex profiles live alongside the canonical skills; generated adapters support Claude, GitHub Copilot, Cursor, Gemini, Kiro, and OpenCode. Other supported harness selections install the portable skills without a native agent profile.
 - A conflict-safe installer that copies the skills and selected agent profiles into an existing checkout. Run `npx quanticore-agent-suite --help` for the current harness list and command syntax.
 
 ## Contribute and get help

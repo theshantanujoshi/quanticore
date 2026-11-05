@@ -37,14 +37,19 @@ class InstallQuanticoreTest(unittest.TestCase):
             ".codex/agents/quanticore_coordinator.toml",
             ".claude/agents/quanticore_coordinator.md",
             ".claude/skills/quanticore-workflow/SKILL.md",
+            ".claude/skills/quanticore-workflow/references/evidence.md",
             ".cursor/agents/quanticore_coordinator.md",
             ".gemini/agents/quanticore_coordinator.md",
             ".github/agents/quanticore_coordinator.agent.md",
             ".opencode/agents/quanticore_coordinator.md",
             ".kiro/agents/quanticore_coordinator.json",
             ".kiro/skills/quanticore-workflow/SKILL.md",
+            ".kiro/skills/quanticore-workflow/references/evidence.md",
         ):
             self.assertTrue((self.target / path).is_file(), path)
+        canonical = (self.target / ".agents/skills/quanticore-workflow/SKILL.md").read_text(encoding="utf-8")
+        for harness in ("claude", "kiro"):
+            self.assertEqual((self.target / f".{harness}/skills/quanticore-workflow/SKILL.md").read_text(encoding="utf-8"), canonical)
         second = self.install()
         self.assertEqual(second.returncode, 0, second.stdout + second.stderr)
         self.assertIn("Installed 0 files", second.stdout)

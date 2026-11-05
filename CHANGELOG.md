@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Aligned skill validation and authoring guidance with the Agent Skills specification.
+- Generated complete Claude and Kiro skill directories, including relative references, and verified them through both installers.
+
 ## [0.1.1] - 2026-10-20
 
 ### Changed

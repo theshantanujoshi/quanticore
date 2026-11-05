@@ -1,6 +1,6 @@
 # Contributing to Quanticore
 
-Quanticore publishes agent instructions and an installer. The canonical seven skills are in `.agents/skills`, and their matching Codex agents are in `.codex/agents`. See the [authoring guide](docs/quanticore-kit-authoring.md) before editing them; generated harness adapters should be updated through the generator.
+Quanticore publishes [Agent Skills](https://agentskills.io/specification) and an installer. The canonical seven skills are in `.agents/skills`, and their optional matching Codex agents are in `.codex/agents`. See the [authoring guide](docs/quanticore-kit-authoring.md) before editing them; generated harness adapters and complete native skill directories should be updated through the generator.
 
 ## Check a change
 

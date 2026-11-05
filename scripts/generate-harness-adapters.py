@@ -44,18 +44,6 @@ def adapter_content(agent: dict[str, str], harness: str, skill_name: str) -> str
     return "\n".join(frontmatter) + "\n\n" + instructions + "\n"
 
 
-def claude_skill_content(skill_name: str, description: str) -> str:
-    return (
-        "---\n"
-        f"name: {yaml_string(skill_name)}\n"
-        f"description: {yaml_string(description)}\n"
-        "---\n\n"
-        f"Read `.agents/skills/{skill_name}/SKILL.md` from the repository root "
-        "and follow that canonical skill. Resolve its relative reference links "
-        f"from `.agents/skills/{skill_name}/`.\n"
-    )
-
-
 def kiro_agent_content(agent: dict[str, str], skill_name: str) -> str:
     return json.dumps({
         "name": agent["name"],
@@ -108,9 +96,13 @@ def expected_files() -> dict[Path, str]:
                 result[directory / f"{name}{suffix}"] = adapter_content(agent, harness, skill_name)
     if len(result) != len(PROFILE_DIRS) * len(skills):
         raise ValueError("Expected one agent per skill and harness")
-    for name, description in skills.items():
-        result[ROOT / ".claude" / "skills" / name / "SKILL.md"] = claude_skill_content(name, description)
-        result[ROOT / ".kiro" / "skills" / name / "SKILL.md"] = claude_skill_content(name, description)
+    # Each native skill directory must work on its own, including relative references.
+    for name in skills:
+        source = SKILLS / name
+        for file in source.rglob("*"):
+            if file.is_file():
+                for harness in ("claude", "kiro"):
+                    result[ROOT / f".{harness}" / "skills" / name / file.relative_to(source)] = file.read_text(encoding="utf-8")
     return result
 
 

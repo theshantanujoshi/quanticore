@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import json
 import subprocess
 import sys
 import tomllib
@@ -14,7 +15,7 @@ SKILLS = ROOT / ".agents" / "skills"
 AGENTS = ROOT / ".codex" / "agents"
 SKILL_REF = re.compile(r"\.agents/skills/([a-z0-9-]+)/SKILL\.md")
 LINK = re.compile(r"(?<!!)\[[^]]+\]\(([^)]+)\)")
-REQUIRED_SECTIONS = ("## When to use", "## Inputs to gather", "## Workflow", "## Report")
+SKILL_NAME = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
 
 
 def validate() -> list[str]:
@@ -27,21 +28,23 @@ def validate() -> list[str]:
             errors.append(f"{relative}: missing frontmatter")
             continue
         header, body = content[4:].split("\n---\n", 1)
-        fields = dict(re.findall(r"^(name|description):\s*(.+)$", header, re.MULTILINE))
-        if set(re.findall(r"^([A-Za-z_-]+):", header, re.MULTILINE)) != {"name", "description"}:
-            errors.append(f"{relative}: frontmatter must contain only name and description")
-        if fields.get("name") != path.parent.name:
+        fields = dict(re.findall(r"^([A-Za-z_-]+):\s*(.*)$", header, re.MULTILINE))
+        if not {"name", "description"}.issubset(fields):
+            errors.append(f"{relative}: frontmatter requires name and description")
+        name = fields.get("name", "")
+        if name != path.parent.name or len(name) > 64 or not SKILL_NAME.fullmatch(name):
             errors.append(f"{relative}: name does not match directory")
-        description = fields.get("description", "").strip()
-        if not (description.startswith('"') and description.endswith('"')):
-            errors.append(f"{relative}: description must be quoted")
-        if len(description.strip('"')) < 80 or "not for" not in description.lower():
-            errors.append(f"{relative}: description is too vague")
-        if len(content.splitlines()) < 35:
-            errors.append(f"{relative}: skill needs substantive procedure and checks")
-        for section in REQUIRED_SECTIONS:
-            if section not in body:
-                errors.append(f"{relative}: missing {section}")
+        raw_description = fields.get("description", "").strip()
+        try:
+            description = json.loads(raw_description) if raw_description.startswith('"') else raw_description
+        except json.JSONDecodeError:
+            description = ""
+        if not isinstance(description, str) or not 1 <= len(description) <= 1024:
+            errors.append(f"{relative}: description must contain 1-1024 characters")
+        if "compatibility" in fields and not 1 <= len(fields["compatibility"]) <= 500:
+            errors.append(f"{relative}: compatibility must contain 1-500 characters")
+        if not body.strip():
+            errors.append(f"{relative}: skill body is empty")
         for raw_link in LINK.findall(body):
             target = raw_link.split("#", 1)[0]
             if target and not target.startswith(("http://", "https://")):

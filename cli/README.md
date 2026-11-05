@@ -29,7 +29,7 @@ node cli/scripts/prepare-payload.mjs
 node cli/bin/quanticore.mjs init D:\path\to\target-repo --harness codex
 ```
 
-Run `node cli/bin/quanticore.mjs --help` for available harnesses. With no arguments, the command installs into the current directory. Canonical `.agents/skills` files are always included; `--harness` selects native profiles. The installer is repeatable and refuses differing existing files or symbolic-link paths.
+Run `node cli/bin/quanticore.mjs --help` for available harnesses. With no arguments, the command installs into the current directory. Canonical Agent Skills in `.agents/skills` are always included; `--harness` selects native profiles. Claude and Kiro receive complete skill directories with their relative references. The installer is repeatable and refuses differing existing files or symbolic-link paths.
 
 ## Build and test
 
